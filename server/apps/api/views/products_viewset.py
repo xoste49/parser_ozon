@@ -35,8 +35,7 @@ class ProductsViewSet(
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        session_parsing = SessionParsingModel.objects.last()
-        return ProductsModel.objects.filter(session_parsing=session_parsing)
+        return ProductsModel.objects.all()
 
     def get_serializer_class(self):
         return ProductsSerializer
