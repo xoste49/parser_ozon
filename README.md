@@ -25,6 +25,8 @@ POST http://127.0.0.1:8000/v1/products/ - Запуск парсинга това
 
 ### Debug
 GUI Selenium находится по адресу `http://127.0.0.1:7900/?autoconnect=1&resize=scale&password=secret`
+Swagger `http://127.0.0.1:8000/swagger/`
+Админ панель `http://127.0.0.1:8000/admin/`
 Инициализация для IDE (например PyCharm):
 ```cmd
 # Windows
