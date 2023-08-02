@@ -23,3 +23,19 @@ services:
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
+
+  celery:
+    volumes:
+      - .:/code
+    build:
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+
+  migrations:
+    volumes:
+      - .:/code
+    build:
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}

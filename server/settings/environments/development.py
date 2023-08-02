@@ -113,6 +113,8 @@ NPLUSONE_WHITELIST = [
 # Set of badly named migrations to ignore:
 DTM_IGNORED_MIGRATIONS = frozenset((
     ('axes', '*'),
+    ('django_celery_beat', '*'),
+    ('django_celery_results', '*'),
 ))
 
 

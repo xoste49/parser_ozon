@@ -23,7 +23,13 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 INSTALLED_APPS: Tuple[str, ...] = (
     # Your apps go here:
-    'server.apps.main',
+    'server.apps.api',
+    'server.apps.parser',
+
+    # General use templates & template tags (should appear first)
+    'adminlte3',
+    # Optional: Django admin theme (must be before django.contrib.admin)
+    'adminlte3_theme',
 
     # Default django apps:
     'django.contrib.auth',
@@ -46,6 +52,16 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'health_check.db',
     'health_check.cache',
     'health_check.storage',
+
+    # DRF
+    'rest_framework',
+
+    # Celery
+    'django_celery_results',
+    'django_celery_beat',
+
+    # drf_yasg
+    'drf_yasg',
 )
 
 MIDDLEWARE: Tuple[str, ...] = (
@@ -108,7 +124,7 @@ LOCALE_PATHS = (
 )
 
 USE_TZ = True
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -198,3 +214,4 @@ EMAIL_TIMEOUT = 5
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+

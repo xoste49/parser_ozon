@@ -15,15 +15,25 @@ from django.contrib.admindocs import urls as admindocs_urls
 from django.urls import include, path
 from django.views.generic import TemplateView
 from health_check import urls as health_urls
-
-from server.apps.main import urls as main_urls
-from server.apps.main.views import index
+from server.apps.api import urls as api_urls
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 admin.autodiscover()
 
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Parser Ozon API",
+      default_version='v1',
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny,],
+)
+
 urlpatterns = [
     # Apps:
-    #path('main/', include(main_urls, namespace='main')),
+    path('v1/', include(api_urls)),
 
     # Health checks:
     path('health/', include(health_urls)),
@@ -42,8 +52,9 @@ urlpatterns = [
         content_type='text/plain',
     )),
 
-    # It is a good practice to have explicit index view:
-    path('', index, name='index'),
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
 if settings.DEBUG:  # pragma: no cover

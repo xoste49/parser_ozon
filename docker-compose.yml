@@ -1,13 +1,22 @@
 version: "3.8"
 services:
-  db:
-    image: "postgres:14-alpine"
-    restart: unless-stopped
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - postgresnet
+  migrations:
+    image: "parser_ozon:dev"
+    build:
+      target: development_build
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+      args:
+        DJANGO_ENV: development
+      cache_from:
+        - "parser_ozon:dev"
+        - "parser_ozon:latest"
     env_file: ./config/.env
+    environment:
+      DJANGO_DATABASE_HOST: db
+    depends_on:
+      - db
+    command: python manage.py migrate
 
   web:
     image: "parser_ozon:dev"
@@ -23,10 +32,12 @@ services:
     volumes:
       - django-static:/var/www/django/static
     depends_on:
-      - db
-    networks:
-      - webnet
-      - postgresnet
+      db:
+        condition: service_started
+      celery:
+        condition: service_started
+      migrations:
+        condition: service_completed_successfully
     env_file: ./config/.env
     environment:
       DJANGO_DATABASE_HOST: db
@@ -46,11 +57,49 @@ services:
       retries: 5
       start_period: 30s
 
-networks:
-  # Network for postgres, use it for services that need access to the db:
-  postgresnet:
-  # Network for your internals, use it by default:
-  webnet:
+  celery:
+    image: "parser_ozon:dev"
+    build:
+      target: development_build
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+      args:
+        DJANGO_ENV: development
+      cache_from:
+        - "parser_ozon:dev"
+        - "parser_ozon:latest"
+    depends_on:
+      db:
+        condition: service_started
+      migrations:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+      selenium:
+        condition: service_started
+    env_file: ./config/.env
+    environment:
+      DJANGO_DATABASE_HOST: db
+      C_FORCE_ROOT: 1
+    command: celery -A server worker --beat --scheduler django -l INFO --concurrency=2
+
+  selenium:
+    build:
+      dockerfile: ./selenium/Dockerfile
+    shm_size: 2gb
+    ports:
+      - 4444:4444
+      - 7900:7900
+
+
+  db:
+    image: "postgres:14-alpine"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file: ./config/.env
+
+  redis:
+    image: redis:6.2.3-alpine
 
 volumes:
   pgdata:

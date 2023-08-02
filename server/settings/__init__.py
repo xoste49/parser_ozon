@@ -27,6 +27,8 @@ _base_settings = (
     'components/logging.py',
     'components/querycount.py',
 
+    'services/celery.py',
+
     # Select the right env:
     'environments/{0}.py'.format(_ENV),
 
