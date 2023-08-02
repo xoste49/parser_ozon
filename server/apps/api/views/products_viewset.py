@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from server.apps.api.serializers import ProductsSerializer
-from server.apps.parser.models import ProductsModel
+from server.apps.parser.models import ProductsModel, SessionParsingModel
 from server.apps.parser.tasks import parse_products_seller_task
 
 @method_decorator(
@@ -35,7 +35,8 @@ class ProductsViewSet(
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return ProductsModel.objects.all()
+        session_parsing = SessionParsingModel.objects.last()
+        return ProductsModel.objects.filter(session_parsing=session_parsing)
 
     def get_serializer_class(self):
         return ProductsSerializer

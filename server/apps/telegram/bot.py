@@ -18,7 +18,15 @@ class TelegramBot:
         products = []
         async for product in ProductsModel.objects.filter(session_parsing=session_parsing):
             products.append(f'{product.id} <a href="https://www.ozon.ru{product.url}">{product.name}</a>')
-        await msg.reply('\n'.join(products), parse_mode="HTML")
+
+        # Делим товары на части из-за ограничения на кол-во символов в одном сообщении телеграм
+        count_lines = 20
+        count_products = len(products)
+        for ndx in range(0, count_products, count_lines):
+            await msg.reply(
+                '\n'.join(products[ndx:min(ndx + count_lines, count_products)]),
+                parse_mode="HTML",
+            )
 
     async def send_message(self, message: str):
         await self.bot.send_message(USER_ID, message)
