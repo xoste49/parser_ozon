@@ -8,8 +8,7 @@ cp config/.env.template config/.env
 nano .env  # Редактируем .env файл, вписываем все необходимые для работы переменные
 docker compose up --build  # Запускаем
 # в отдельном окне
-docker compose exec -u root web bash  # Заходим в контейнер под root пользователем
-python manage.py createsuperuser  # Создаем суперпользователя
+docker compose exec -u root web python manage.py createsuperuser  # Создаем суперпользователя
 ```
 
 ### URLs
@@ -20,10 +19,6 @@ POST http://127.0.0.1:8000/v1/products/ - Запуск парсинга това
 ```
 
 ### Команды  
-`docker compose up --build  # Запуск проекта`
+`docker compose up --build` Запуск проекта  
+`docker compose exec -u root web python manage.py createsuperuser` Создание суперпользователя   
 
-Создание суперпользователя (в отдельном окне командной строки)
-```bash
-docker compose exec -u root web bash
-python manage.py createsuperuser
-```
