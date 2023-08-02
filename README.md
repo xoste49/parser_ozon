@@ -1,1 +1,3 @@
-docker compose up --build
+
+### Команды  
+`docker compose up --build  # Запуск проекта`

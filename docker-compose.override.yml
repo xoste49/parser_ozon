@@ -39,3 +39,11 @@ services:
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
+
+  telegram:
+    volumes:
+      - .:/code
+    build:
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}

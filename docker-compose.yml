@@ -83,6 +83,27 @@ services:
       C_FORCE_ROOT: 1
     command: celery -A server worker --beat --scheduler django -l INFO --concurrency=2
 
+  telegram:
+    image: "parser_ozon:dev"
+    build:
+      target: development_build
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+      args:
+        DJANGO_ENV: development
+      cache_from:
+        - "parser_ozon:dev"
+        - "parser_ozon:latest"
+    depends_on:
+      db:
+        condition: service_started
+      migrations:
+        condition: service_completed_successfully
+    env_file: ./config/.env
+    environment:
+      DJANGO_DATABASE_HOST: db
+    command: python manage.py start_polling
+
   selenium:
     build:
       dockerfile: ./selenium/Dockerfile
@@ -90,7 +111,6 @@ services:
     ports:
       - 4444:4444
       - 7900:7900
-
 
   db:
     image: "postgres:14-alpine"

@@ -60,6 +60,7 @@ yamllint = "^1.32"
 safety = "^2.3"
 dotenv-linter = "^0.4"
 ipython = "^8.14"
+isort = "^5.12.0"
 
 [build-system]
 requires = ["poetry-core>=1.6"]

@@ -25,6 +25,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     # Your apps go here:
     'server.apps.api',
     'server.apps.parser',
+    'server.apps.telegram',
 
     # General use templates & template tags (should appear first)
     'adminlte3',

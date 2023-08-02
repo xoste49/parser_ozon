@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 
 class ProductsModel(models.Model):
@@ -16,9 +15,11 @@ class ProductsModel(models.Model):
         verbose_name='Стоимость товара',
     )
 
-    datetime_parse = models.DateTimeField(
-        verbose_name='Дата и время парсинга',
-        default=timezone.now,
+    session_parsing = models.ForeignKey(
+        'parser.SessionParsingModel',
+        on_delete=models.CASCADE,
+        related_name='products',
+        verbose_name='Сессия парсинга',
     )
 
     class Meta(object):
